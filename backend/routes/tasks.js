@@ -1,5 +1,5 @@
 import express from 'express';
-import Task from '../models/Task.js';
+import Task from '../models/task.js';
 
 const router = express.Router();
 
@@ -34,7 +34,7 @@ router.patch('/:id', async (req, res) => {
     );
 
     if (!updatedTask) {
-      return res.status(404).json({ error: 'Tasks not found' });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     res.json(updatedTask);
@@ -48,10 +48,24 @@ router.delete('/:id', async (req, res) => {
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
 
     if (!deletedTask) {
-      return res.status(404).json({ error: 'Tarefa não encontrada' });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
-    res.json({ message: 'Tarefa removida com sucesso' });
+    res.json({ message: 'Task removed successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    res.json(task);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
